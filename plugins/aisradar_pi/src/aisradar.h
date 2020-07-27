@@ -32,6 +32,7 @@
 #include "wx/socket.h"
 #include "wx/wxprec.h"
 #include "wx/dcbuffer.h"
+#include <wx/grid.h>
 #include "Target.h"
 
 #ifndef  WX_PRECOMP
@@ -152,6 +153,9 @@ private:
     int                     m_Range;
     ViewState              *m_pViewState;
 
+     wxGrid                 *ShipInfo;
+    // wxGrid                 *OwnShipDesion;
+
     wxButton               *m_pShowList;
     wxTextCtrl             *m_textCtrl1;
     wxButton               *m_soundButton;
@@ -173,6 +177,29 @@ private:
 
     // kalman
     //FusionEKF               fusionEKF;
+    //  enum C01
+    //  {
+    //      "R" ,
+    //      "L" ,
+    //      "K" ,
+    //      "0" 
+    //  };
+    //  enum V
+    //  {
+    //      "M" = 0,
+    //      "A" = 1,
+    //      "K" = 2,
+    //      "0" = 3
+    //  };
+    //  enum C02
+    //  {
+    //      "O" = 0,
+    //      "R" = 1,
+    //      "L" = 2,
+    //      "F" = 3,
+    //      "K" = 4
+    //  };
+
 };
 
 

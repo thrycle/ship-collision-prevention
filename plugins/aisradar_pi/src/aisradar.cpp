@@ -38,6 +38,8 @@
 #include <list>
 #include <algorithm>
 #include <thread>
+#include <vector>
+
 
 #define  min(a,b)  ( (a>b)? b : a )
 #define  max(a,b)  ( (a>b)? a : b )
@@ -242,40 +244,131 @@ bool RadarFrame::Create ( wxWindow *parent, aisradar_pi *ppi, wxWindowID id,
     cbox->FitInside(m_pCanvas);
     canvas->Add(m_pCanvas, 1, wxEXPAND);
     vbox->Add(canvas, 1, wxALL | wxEXPAND, 5);
+
+    ShipInfo = new wxGrid( panel, wxID_ANY, wxPoint(0,0), wxSize(800,300), 0 );
+
+     // Grid
+	ShipInfo->CreateGrid( 6, 4 );
+	ShipInfo->EnableEditing( true );
+	ShipInfo->EnableGridLines( true );
+	ShipInfo->SetGridLineColour( wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHT ) );
+	ShipInfo->EnableDragGridSize( false );
+	ShipInfo->SetMargins( 0, 0 );
+
+	// Columns
+	ShipInfo->EnableDragColMove( false );
+	ShipInfo->EnableDragColSize( true );
+	ShipInfo->SetColLabelSize( 100 );
+	ShipInfo->SetColLabelAlignment( wxALIGN_CENTER, wxALIGN_CENTER );
+    ShipInfo->SetColSize(0,130);
+    ShipInfo->SetColSize(1,130);
+    ShipInfo->SetColSize(2,130);
+    ShipInfo->SetColSize(3,130);
+    ShipInfo->SetColLabelValue(0,wxT("船舶编号"));
+    ShipInfo->SetColLabelValue(1,wxT("真航向"));
+    ShipInfo->SetColLabelValue(2,wxT("航速"));
+    ShipInfo->SetColLabelValue(3,wxT("船舶类型"));
+    
+	// Rows
+	ShipInfo->EnableDragRowSize( true );
+	ShipInfo->SetRowLabelSize( 150);
+	ShipInfo->SetRowLabelAlignment( wxALIGN_CENTER, wxALIGN_CENTER );
+    
+    ShipInfo->SetRowLabelValue(0,wxT("危险船舶"));
+    ShipInfo->SetRowLabelValue(1,wxT(" "));
+    ShipInfo->SetRowLabelValue(2,wxT(" "));
+    ShipInfo->SetRowLabelValue(3,wxT("偏航报警"));
+    ShipInfo->SetRowLabelValue(4,wxT("转向点提示"));
+    ShipInfo->SetRowLabelValue(5,wxT("辅助决策"));
+    ShipInfo->SetCellSize(3,0,1,4);
+    ShipInfo->SetCellSize(4,0,1,4);
+    ShipInfo->SetCellSize(5,0,1,4);
+	 // Label Appearance
+
+	 // Cell Defaults
+	 ShipInfo->SetDefaultCellAlignment( wxALIGN_CENTER, wxALIGN_CENTER);
+     //ShipInfo->Fit();
+     
+
+
+	  vbox->Add( ShipInfo, 0, wxALL, 5 );
+       
+      vbox->MyFit(this);
+    //   ShipInfo->SetCellValue(0,	0,	wxT("危险船舶"));
+    //   ShipInfo->SetCellValue(0,	1,	wxT("船舶编号"));
+    //   ShipInfo->SetCellValue(0,	2,	wxT("真航向"));
+    //   ShipInfo->SetCellValue(0,	3,	wxT("航速"));
+    //   ShipInfo->SetCellValue(0,	4,	wxT("船舶类型"));
+    //   ShipInfo->SetCellValue(4,	0,	wxT("偏航报警"));
+    //   ShipInfo->SetCellValue(5,	0,	wxT("转向点提示"));
+    //   ShipInfo->SetCellValue(6,	0,	wxT("辅助决策"));
+    //   ShipInfo->SetReadOnly(0,	0);
+    //   ShipInfo->SetReadOnly(0,	1);
+    //   ShipInfo->SetReadOnly(0,	2);
+    //   ShipInfo->SetReadOnly(0,	3);
+    //   ShipInfo->SetReadOnly(0,	4);
+    //   ShipInfo->SetReadOnly(4,	0);
+    //   ShipInfo->SetReadOnly(5,	0);
+    //   ShipInfo->SetReadOnly(6,	0);
+   
+	// OwnShipDecision = new wxGrid( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
+
+	// // Grid
+	// OwnShipDecision->CreateGrid( 1, 5 );
+	// OwnShipDecision->EnableEditing( true );
+	// OwnShipDecision->EnableGridLines( true );
+	// OwnShipDecision->EnableDragGridSize( false );
+	// OwnShipDecision->SetMargins( 0, 0 );
+
+	// // Columns
+	// OwnShipDecision->EnableDragColMove( false );
+	// OwnShipDecision->EnableDragColSize( true );
+	// OwnShipDecision->SetColLabelSize( 30 );
+	// OwnShipDecision->SetColLabelAlignment( wxALIGN_CENTER, wxALIGN_CENTER );
+
+	// // Rows
+	// OwnShipDecision->EnableDragRowSize( true );
+	// OwnShipDecision->SetRowLabelSize( 80 );
+	// OwnShipDecision->SetRowLabelAlignment( wxALIGN_CENTER, wxALIGN_CENTER );
+
+	// // Label Appearance
+
+	// // Cell Defaults
+	// OwnShipDecision->SetDefaultCellAlignment( wxALIGN_LEFT, wxALIGN_TOP );
   
     // Add controls
-    wxStaticBox    *sb=new wxStaticBox(panel,wxID_ANY, _("Options"));
-    wxStaticBoxSizer *controls = new wxStaticBoxSizer(sb, wxHORIZONTAL);
-    wxStaticText *st1 = new wxStaticText(panel,wxID_ANY,_("Range"));
-    controls->Add(st1,0,wxRIGHT,5);
-    m_pRange = new wxComboBox(panel, cbRangeId, wxT(""));
-    m_pRange->Append(wxT("0.25"));
-    m_pRange->Append(wxT("0.5") );
-    m_pRange->Append(wxT("1")   );
-    m_pRange->Append(wxT("2")   );
-    m_pRange->Append(wxT("4")   );
-    m_pRange->Append(wxT("8")   );
-    m_pRange->Append(wxT("12")  );
-    m_pRange->Append(wxT("16")  );
-    m_pRange->Append(wxT("32")  );
-    m_pRange->SetSelection(pPlugIn->GetRadarRange());
-    controls->Add(m_pRange);
+    // wxStaticBox    *sb=new wxStaticBox(panel,wxID_ANY, _("Options"));
+    // wxStaticBoxSizer *controls = new wxStaticBoxSizer(sb, wxHORIZONTAL);
+    // wxStaticText *st1 = new wxStaticText(panel,wxID_ANY,_("Range"));
+    // controls->Add(st1,0,wxRIGHT,5);
+    // m_pRange = new wxComboBox(panel, cbRangeId, wxT(""));
+    // m_pRange->Append(wxT("0.25"));
+    // m_pRange->Append(wxT("0.5") );
+    // m_pRange->Append(wxT("1")   );
+    // m_pRange->Append(wxT("2")   );
+    // m_pRange->Append(wxT("4")   );
+    // m_pRange->Append(wxT("8")   );
+    // m_pRange->Append(wxT("12")  );
+    // m_pRange->Append(wxT("16")  );
+    // m_pRange->Append(wxT("32")  );
+    // m_pRange->SetSelection(pPlugIn->GetRadarRange());
+    // controls->Add(m_pRange);
 
-    wxStaticText *st2 = new wxStaticText(panel,wxID_ANY,_("Nautical Miles"));
-    controls->Add(st2,0,wxRIGHT|wxLEFT,5);
+    // wxStaticText *st2 = new wxStaticText(panel,wxID_ANY,_("Nautical Miles"));
+    // controls->Add(st2,0,wxRIGHT|wxLEFT,5);
 
-    m_pNorthUp = new wxCheckBox(panel, cbNorthUpId, _("North Up"));
-    m_pNorthUp->SetValue(pPlugIn->GetRadarNorthUp());
-    controls->Add(m_pNorthUp, 0, wxLEFT, 10);
+    // m_pNorthUp = new wxCheckBox(panel, cbNorthUpId, _("North Up"));
+    // m_pNorthUp->SetValue(pPlugIn->GetRadarNorthUp());
+    // controls->Add(m_pNorthUp, 0, wxLEFT, 10);
 
-    m_pBearingLine = new wxCheckBox(panel, cbBearingLineId, _("EBL"));
-    m_pBearingLine->SetValue(false);
-    controls->Add(m_pBearingLine, 0, wxLEFT, 10);
+    // m_pBearingLine = new wxCheckBox(panel, cbBearingLineId, _("EBL"));
+    // m_pBearingLine->SetValue(false);
+    // controls->Add(m_pBearingLine, 0, wxLEFT, 10);
     
-    m_pShowList = new wxButton(panel, btShowAisList, _("ShowAisList"));
-    controls->Add(m_pShowList, 0, wxLEFT, 10);
+    // m_pShowList = new wxButton(panel, btShowAisList, _("ShowAisList"));
+    // controls->Add(m_pShowList, 0, wxLEFT, 10);
 
-    vbox->Add(controls, 0, wxEXPAND | wxALL, 5);
+    // vbox->Add(controls, 0, wxEXPAND | wxALL, 5);
 
     //加一个语音播报窗口
     wxStaticBoxSizer* sbSizer1;
@@ -426,22 +519,22 @@ void RadarFrame::OnBearingLine( wxCommandEvent& event ) {
 
 
 void RadarFrame::OnLeftMouse(const wxPoint &curpos) {
-    if (m_pBearingLine->GetValue()) {
-        int width      = max(m_pCanvas->GetSize().GetWidth(), (MIN_RADIUS)*2 );
-        int height     = max(m_pCanvas->GetSize().GetHeight(),(MIN_RADIUS)*2 );
-        wxPoint center(width/2, height/2);
-        int dx = curpos.x - center.x;
-        int dy = center.y - curpos.y;    // top of screen y=0
-        double tmpradius = sqrt((double)(dx*dx)+(double)(dy*dy));
-        double angle= dy/tmpradius;
-        m_Ebl = asin(angle)*(double)((double)180./(double)3.141592653589);
-        if ( dx >= 0 ) {
-            m_Ebl = 90 - m_Ebl;
-        } else {
-            m_Ebl = 360 - (90 - m_Ebl);
-        }
-        this->Refresh();
-    }
+    // if (m_pBearingLine->GetValue()) {
+    //     int width      = max(m_pCanvas->GetSize().GetWidth(), (MIN_RADIUS)*2 );
+    //     int height     = max(m_pCanvas->GetSize().GetHeight(),(MIN_RADIUS)*2 );
+    //     wxPoint center(width/2, height/2);
+    //     int dx = curpos.x - center.x;
+    //     int dy = center.y - curpos.y;    // top of screen y=0
+    //     double tmpradius = sqrt((double)(dx*dx)+(double)(dy*dy));
+    //     double angle= dy/tmpradius;
+    //     m_Ebl = asin(angle)*(double)((double)180./(double)3.141592653589);
+    //     if ( dx >= 0 ) {
+    //         m_Ebl = 90 - m_Ebl;
+    //     } else {
+    //         m_Ebl = 360 - (90 - m_Ebl);
+    //     }
+    //     this->Refresh();
+    // }
 }
 
 
@@ -882,32 +975,119 @@ void RadarFrame::GetClientResult(wxSocketBase *sock)
             // 处理张梁算法结果
             // "2-10-2-R-M-L
             std::vector<wxString> res = split(sock_buffer, wxT("-"));
-            int i = 1; wxString s;
+            // int i = 1; wxString s;
             
+            
+            
+            // if (res[0] != "0"){
+            //     m_textCtrl1->AppendText(wxT("危险船舶MMSI："));
+            //     for (; i<=atoi(res[0].c_str()); i++){
+            //         m_textCtrl1->AppendText("|");
+            //         m_textCtrl1->AppendText(res[i]);
+            //         m_textCtrl1->AppendText("|");
+            //     }
+            //     m_textCtrl1->AppendText("\n");
+            //     s = wxT("预警操作：");
+            //     s.Append(_("  warm_daner->"));s.Append(res[i++]);
+            //     s.Append(_("  support->"));s.Append(res[i++]);
+            //     s.Append(_("  warm_yaw->"));s.Append(res[i++]);
+            //     m_textCtrl1->AppendText(s);
+            // }
+            // else{
+            //     m_textCtrl1->AppendText(wxT("------无危险船舶MMSI-----\n"));
+            //     s = wxT("预警操作：");
+            //     s.Append(_("  warm_daner->"));s.Append(res[i++]);
+            //     s.Append(_("  support->"));s.Append(res[i++]);
+            //     s.Append(_("  warm_yaw->") m_textCtrl1->AppendText(s);   );s.Append(res[i++]);    
+            //    
+            // }
+            int i = 1; wxString c01vbuff;
             // TODO:改成表格显示
-            
             if (res[0] != "0"){
-                m_textCtrl1->AppendText(wxT("危险船舶MMSI："));
+                
                 for (; i<=atoi(res[0].c_str()); i++){
-                    m_textCtrl1->AppendText("|");
-                    m_textCtrl1->AppendText(res[i]);
-                    m_textCtrl1->AppendText("|");
+                    
+                   ShipInfo->SetCellValue(i-1, 0,	res[i]);
                 }
-                m_textCtrl1->AppendText("\n");
-                s = wxT("预警操作：");
-                s.Append(_("  warm_daner->"));s.Append(res[i++]);
-                s.Append(_("  support->"));s.Append(res[i++]);
-                s.Append(_("  warm_yaw->"));s.Append(res[i++]);
-                m_textCtrl1->AppendText(s);
             }
+                
             else{
-                m_textCtrl1->AppendText(wxT("------无危险船舶MMSI-----\n"));
-                s = wxT("预警操作：");
-                s.Append(_("  warm_daner->"));s.Append(res[i++]);
-                s.Append(_("  support->"));s.Append(res[i++]);
-                s.Append(_("  warm_yaw->"));s.Append(res[i++]);    
-                m_textCtrl1->AppendText(s);   
+                ShipInfo->SetCellValue(3, 0, wxT("无危险船舶"));
+                 
             }
+            if(res[i]=="R")
+            {
+                c01vbuff.append(wxT("右转向"));
+            }
+            else if(res[i]=="L")
+            {
+                c01vbuff.append(wxT("左转向"));
+            }
+             else if(res[i]=="K")
+            {
+                c01vbuff.append(wxT("保向"));
+            }
+            else
+            {    
+            }
+            i++;
+
+            if(res[i]=="M")
+            {
+                c01vbuff.append(wxT("减速"));
+            }
+            else if(res[i]=="A")
+            {
+                c01vbuff.append(wxT("加速"));
+            }
+             else if(res[i]=="K")
+            {
+                c01vbuff.append(wxT("保速"));
+            }
+            else
+            {      
+            }
+            ShipInfo->SetCellValue(5, 0, c01vbuff);
+            i++;
+
+            if(res[i]=="O")
+            {
+                ShipInfo->SetCellValue(3, 0, wxT("航道外"));
+            }
+            else if(res[i]=="R")
+            {
+                ShipInfo->SetCellValue(3, 0, wxT("向右偏离"));
+            }
+             else if(res[i]=="L")
+            {
+                ShipInfo->SetCellValue(3, 0, wxT("向左偏离"));
+            }
+             else if(res[i]=="F")
+            {
+                ShipInfo->SetCellValue(3, 0, wxT("未顺航道行驶"));
+            }
+            else
+            {      
+            }
+            i++;
+
+            wxString Tbuff;
+            if(res[i]=="1")
+            {
+                ShipInfo->SetCellValue(3, 0, wxT("注意转向"));
+            }
+            else if(atoi(res[i].c_str())>=2)
+            {
+                Tbuff.append(res[i]);
+                Tbuff.append(wxT("分钟后注意转向"));
+                ShipInfo->SetCellValue(4, 0, Tbuff);
+            }
+            else
+            {      
+            }
+           
+           
+            
         }
         wxString s = "Get Message and Prase Right";
         unsigned int bufflen = s.size();
@@ -965,9 +1145,9 @@ void RadarFrame::TrimAisField(wxString *fld) {
 void RadarFrame::renderBoats(wxDC& dc, wxPoint &center, wxSize &size, int radius, ArrayOfPlugIn_AIS_Targets *AisTargets ) {
     // Determine orientation
     double offset=pPlugIn->GetCog();
-    if (m_pNorthUp->GetValue()) {
-        offset=0;
-    }
+    // if (m_pNorthUp->GetValue()) {
+    //     offset=0;
+    // }
 
     // Get display settings
     bool   m_ShowMoored=pPlugIn->ShowMoored();
@@ -1145,67 +1325,67 @@ void RadarFrame::renderBoats(wxDC& dc, wxPoint &center, wxSize &size, int radius
 
 void RadarFrame::renderRange(wxDC& dc, wxPoint &center, wxSize &size, int radius) {
     // Draw the circles
-    dc.SetBackground(wxBrush(m_BgColour));
-    dc.Clear();
-    dc.SetBrush(wxBrush(wxColour(0,0,0),wxTRANSPARENT));
-    dc.SetPen( wxPen( wxColor(128,128,128), 1, wxSOLID ) );
-	dc.DrawCircle( center, radius);
-    dc.SetPen( wxPen( wxColor(128,128,128), 1, wxDOT ) );
-    dc.DrawCircle( center, radius*0.75 );
-    dc.DrawCircle( center, radius*0.50 );
-    dc.DrawCircle( center, radius*0.25 );
-    dc.SetPen( wxPen( wxColor(128,128,128), 2, wxSOLID ) );
-    dc.DrawCircle( center, 10 );
+    // dc.SetBackground(wxBrush(m_BgColour));
+    // dc.Clear();
+    // dc.SetBrush(wxBrush(wxColour(0,0,0),wxTRANSPARENT));
+    // dc.SetPen( wxPen( wxColor(128,128,128), 1, wxSOLID ) );
+	// dc.DrawCircle( center, radius);
+    // dc.SetPen( wxPen( wxColor(128,128,128), 1, wxDOT ) );
+    // dc.DrawCircle( center, radius*0.75 );
+    // dc.DrawCircle( center, radius*0.50 );
+    // dc.DrawCircle( center, radius*0.25 );
+    // dc.SetPen( wxPen( wxColor(128,128,128), 2, wxSOLID ) );
+    // dc.DrawCircle( center, 10 );
 
-    // Draw the crosshairs
-    dc.SetPen( wxPen( wxColor(128,128,128), 1, wxDOT ) );
-    dc.DrawLine( size.GetWidth()/2,0, size.GetWidth()/2, size.GetHeight());
-    dc.DrawLine( 0,size.GetHeight()/2, size.GetWidth(), size.GetHeight()/2);
+    // // Draw the crosshairs
+    // dc.SetPen( wxPen( wxColor(128,128,128), 1, wxDOT ) );
+    // dc.DrawLine( size.GetWidth()/2,0, size.GetWidth()/2, size.GetHeight());
+    // dc.DrawLine( 0,size.GetHeight()/2, size.GetWidth(), size.GetHeight()/2);
 
-    // Draw the range description
-    wxFont fnt = dc.GetFont();
-    fnt.SetPointSize(14);
-    int fh=fnt.GetPointSize();
-    dc.SetFont(fnt);
-    float Range=RangeData[m_pRange->GetSelection()];
-    dc.DrawText(wxString::Format(wxT("%s %2.2f"), _("Range"),Range  ), 0, 0); 
+    // // Draw the range description
+    // wxFont fnt = dc.GetFont();
+    // fnt.SetPointSize(14);
+    // int fh=fnt.GetPointSize();
+    // dc.SetFont(fnt);
+    // float Range=RangeData[m_pRange->GetSelection()];
+    // dc.DrawText(wxString::Format(wxT("%s %2.2f"), _("Range"),Range  ), 0, 0); 
  //   dc.DrawText(wxString::Format(wxT("%s %2.2f"), _("Ring "), Range/4), 0, fh+TEXT_MARGIN); 
 
     // Draw the orientation info
-	wxString dir;
-	if (m_pNorthUp->GetValue()) {
-		dir=_("North Up");
-        // Draw north, east, south and west indicators
-        dc.SetTextForeground(wxColour(128,128,128));
-        dc.DrawText(_("N"), size.GetWidth()/2 + 5, 0);
-        dc.DrawText(_("S"), size.GetWidth()/2 + 5, size.GetHeight()-dc.GetCharHeight());
-        dc.DrawText(_("W"), 5, size.GetHeight()/2 - dc.GetCharHeight());
-        dc.DrawText(_("E"), size.GetWidth() - 7 - dc.GetCharWidth(), size.GetHeight()/2 - dc.GetCharHeight());
-    } else {
-        dir=_("Course Up"); 
-        // Display our own course at to top
-        double offset=pPlugIn->GetCog();
-        dc.SetTextForeground(wxColour(128,128,128));
-        int cpos=0;
-        dc.DrawText(wxString::Format(_T("%3.0f\u00B0"),offset), size.GetWidth()/2 - dc.GetCharWidth()*2, cpos);
-    }
-    dc.SetTextForeground(wxColour(0,0,0));
-    dc.DrawText(dir,  size.GetWidth()-dc.GetCharWidth()*dir.Len()-fh-TEXT_MARGIN, 0); 
-    if (m_pBearingLine->GetValue()) {
-        // Display and estimated bearing line
-        int x = center.x;
-        int y = center.y;
-        double angle = m_Ebl *(double)((double)3.141592653589/(double)180.);
-        x += sin(angle) * (radius + 20);
-        y -= cos(angle) * (radius + 20);
-        dc.DrawLine(center.x, center.y, x, y);
-        int tx = center.x + sin(angle) * (radius - 20) - dc.GetCharWidth() * 1.5;
-        int ty = center.y - cos(angle) * (radius - 20);
-        double offset=0.;
-        if ( !m_pNorthUp->GetValue() ) {
-            offset = pPlugIn->GetCog();
-        }
-        dc.SetTextForeground(wxColour(128,128,128));
-        dc.DrawText(wxString::Format(_T("%3.1d\u00B0"),(int)(m_Ebl+offset)%360),tx,ty);
-    }
+	// wxString dir;
+	// if (m_pNorthUp->GetValue()) {
+	// 	dir=_("North Up");
+    //     // Draw north, east, south and west indicators
+    //     dc.SetTextForeground(wxColour(128,128,128));
+    //     dc.DrawText(_("N"), size.GetWidth()/2 + 5, 0);
+    //     dc.DrawText(_("S"), size.GetWidth()/2 + 5, size.GetHeight()-dc.GetCharHeight());
+    //     dc.DrawText(_("W"), 5, size.GetHeight()/2 - dc.GetCharHeight());
+    //     dc.DrawText(_("E"), size.GetWidth() - 7 - dc.GetCharWidth(), size.GetHeight()/2 - dc.GetCharHeight());
+    // } else {
+    //     dir=_("Course Up"); 
+    //     // Display our own course at to top
+    //     double offset=pPlugIn->GetCog();
+    //     dc.SetTextForeground(wxColour(128,128,128));
+    //     int cpos=0;
+    //     dc.DrawText(wxString::Format(_T("%3.0f\u00B0"),offset), size.GetWidth()/2 - dc.GetCharWidth()*2, cpos);
+    // }
+    // dc.SetTextForeground(wxColour(0,0,0));
+    // dc.DrawText(dir,  size.GetWidth()-dc.GetCharWidth()*dir.Len()-fh-TEXT_MARGIN, 0); 
+    // if (m_pBearingLine->GetValue()) {
+    //     // Display and estimated bearing line
+    //     int x = center.x;
+    //     int y = center.y;
+    //     double angle = m_Ebl *(double)((double)3.141592653589/(double)180.);
+    //     x += sin(angle) * (radius + 20);
+    //     y -= cos(angle) * (radius + 20);
+    //     dc.DrawLine(center.x, center.y, x, y);
+    //     int tx = center.x + sin(angle) * (radius - 20) - dc.GetCharWidth() * 1.5;
+    //     int ty = center.y - cos(angle) * (radius - 20);
+    //     double offset=0.;
+    //     if ( !m_pNorthUp->GetValue() ) {
+    //         offset = pPlugIn->GetCog();
+    //     }
+    //     dc.SetTextForeground(wxColour(128,128,128));
+    //     dc.DrawText(wxString::Format(_T("%3.1d\u00B0"),(int)(m_Ebl+offset)%360),tx,ty);
+    // }
 }

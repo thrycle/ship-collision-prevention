@@ -48,6 +48,20 @@
         "cinttypes": "cpp",
         "utility": "cpp",
         "typeinfo": "cpp",
-        "regex": "cpp"
-    }
+        "regex": "cpp",
+        "bitset": "cpp",
+        "complex": "cpp",
+        "csignal": "cpp",
+        "optional": "cpp",
+        "string_view": "cpp",
+        "iomanip": "cpp",
+        "iterator": "cpp",
+        "map": "cpp",
+        "memory_resource": "cpp",
+        "random": "cpp",
+        "set": "cpp",
+        "string": "cpp",
+        "*.inc": "cpp"
+    },
+    "C_Cpp.errorSquiggles": "Enabled"
 }
